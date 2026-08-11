@@ -10,6 +10,8 @@ import {
 type Language = "en" | "ar";
 type WorkFilter = WorkCategory | "All";
 
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
 type AppState = {
   activeCategory: WorkFilter;
   isLanguageTransitioning: boolean;
@@ -754,7 +756,7 @@ export default function App() {
             <a className="button primary" href={contact.whatsapp}>
               {t.primary}
             </a>
-            <a className="button secondary" href="/assets/ahmed-sameh-cv.pdf">
+            <a className="button secondary" href={assetPath("assets/ahmed-sameh-cv.pdf")}>
               {t.cv}
             </a>
             <a className="button ghost" href={contact.drivePortfolio}>
@@ -765,9 +767,9 @@ export default function App() {
 
         <div className="portrait-panel reveal-on-scroll" aria-label="Ahmed Sameh portrait">
           <picture>
-            <source srcSet="/assets/ahmed-sameh-portrait.webp" type="image/webp" />
+            <source srcSet={assetPath("assets/ahmed-sameh-portrait.webp")} type="image/webp" />
             <img
-              src="/assets/ahmed-sameh-portrait.png"
+              src={assetPath("assets/ahmed-sameh-portrait.png")}
               alt="Ahmed Sameh professional portrait"
               decoding="async"
               fetchPriority="high"
