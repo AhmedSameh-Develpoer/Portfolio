@@ -199,7 +199,7 @@ a {
 
 .site-shell[dir="rtl"] .focus-panel {
   right: auto;
-  left: clamp(14px, 1.4vw, 26px);
+  left: clamp(24px, 4vw, 76px);
 }
 
 .site-shell[dir="rtl"] .portrait-panel {
@@ -478,23 +478,31 @@ h1 {
   position: relative;
   align-self: center;
   justify-self: end;
-  width: min(760px, 100%);
+  width: min(820px, 100%);
   min-height: 0;
   max-height: none;
   aspect-ratio: 1600 / 1195;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
   background: #c1c1c3;
   box-shadow:
-    0 30px 90px rgba(0, 0, 0, 0.48),
-    0 0 0 1px rgba(142, 53, 255, 0.12);
+    0 34px 110px rgba(0, 0, 0, 0.54),
+    0 0 0 1px rgba(142, 53, 255, 0.16),
+    0 0 90px rgba(142, 53, 255, 0.16);
 }
 
 .portrait-panel::before {
-  display: none;
-  content: none;
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(5, 4, 8, 0.34), transparent 18%, transparent 82%, rgba(5, 4, 8, 0.18)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 28%, rgba(5, 4, 8, 0.1));
+  content: "";
+  pointer-events: none;
 }
 
 .portrait-panel::after {
@@ -528,40 +536,44 @@ h1 {
 }
 
 .focus-panel {
-  display: grid;
-  gap: 10px;
+  display: flex;
+  gap: 8px;
   position: absolute;
-  top: 50%;
-  right: clamp(14px, 1.4vw, 26px);
+  right: clamp(24px, 4vw, 76px);
+  bottom: clamp(52px, 7vh, 88px);
   z-index: 4;
-  width: clamp(150px, 10vw, 180px);
-  transform: translateY(-50%);
+  width: min(680px, 40vw);
+  justify-content: center;
+  transform: none;
 }
 
 .focus-panel.scroll-reveal {
-  transform: translateY(calc(-50% + 42px)) scale(0.985);
+  transform: translateY(34px) scale(0.985);
 }
 
 .focus-panel.scroll-reveal.is-visible {
-  transform: translateY(-50%) scale(1);
+  transform: translateY(0) scale(1);
 }
 
 .site-shell.is-language-switching .focus-panel.scroll-reveal.is-visible {
-  transform: translateY(calc(-50% + 8px)) scale(1);
+  transform: translateY(8px) scale(1);
 }
 
 .focus-panel a {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 7px;
-  background: rgba(18, 13, 25, 0.76);
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 6px;
+  background: rgba(18, 13, 25, 0.68);
   color: var(--text);
-  padding: 12px 14px;
-  font-size: 0.86rem;
+  padding: 10px 12px;
+  font-size: 0.78rem;
   font-weight: 820;
   backdrop-filter: blur(12px);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+  text-align: center;
 }
 
 .focus-panel a::after,
@@ -1281,11 +1293,11 @@ h1 {
   }
 
   .hero {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.8fr);
+    grid-template-columns: minmax(0, 0.92fr) minmax(430px, 0.9fr);
   }
 
   .site-shell[dir="rtl"] .hero {
-    grid-template-columns: minmax(360px, 0.8fr) minmax(0, 1fr);
+    grid-template-columns: minmax(430px, 0.9fr) minmax(0, 0.92fr);
   }
 
   .site-shell[dir="rtl"] .portrait-panel {
@@ -1297,7 +1309,13 @@ h1 {
   }
 
   .focus-panel {
-    display: none;
+    right: clamp(20px, 3vw, 36px);
+    bottom: 44px;
+    width: min(560px, 43vw);
+  }
+
+  .site-shell[dir="rtl"] .focus-panel {
+    left: clamp(20px, 3vw, 36px);
   }
 
   h1 {
