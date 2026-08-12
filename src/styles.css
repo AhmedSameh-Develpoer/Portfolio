@@ -1382,7 +1382,7 @@ h1 {
   .hero-copy,
   .site-shell[dir="rtl"] .hero-copy {
     grid-column: auto;
-    grid-row: auto;
+    grid-row: 2;
     justify-self: center;
     max-width: 720px;
     text-align: center;
@@ -1412,7 +1412,7 @@ h1 {
 
   .portrait-panel {
     grid-column: auto;
-    grid-row: auto;
+    grid-row: 1;
     justify-self: center;
     aspect-ratio: 0.9 / 1;
     min-height: 420px;
