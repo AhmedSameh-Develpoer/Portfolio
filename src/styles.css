@@ -266,7 +266,7 @@ a {
 }
 
 .site-shell[dir="rtl"] .portrait-panel img {
-  transform: scaleX(-1) scale(1.08);
+  transform: scaleX(-1);
 }
 
 .site-shell[dir="rtl"] .contact-actions {
@@ -478,10 +478,10 @@ h1 {
   position: relative;
   align-self: center;
   justify-self: end;
-  width: min(620px, 100%);
-  min-height: clamp(490px, 59vh, 630px);
-  max-height: 650px;
-  aspect-ratio: 0.88 / 1;
+  width: min(760px, 100%);
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: 1600 / 1195;
   overflow: hidden;
   isolation: isolate;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -527,9 +527,9 @@ h1 {
   width: 100%;
   height: 100%;
   filter: grayscale(0.08) contrast(1.1) brightness(0.9);
-  object-fit: cover;
-  object-position: center bottom;
-  transform: scale(1.08);
+  object-fit: contain;
+  object-position: center center;
+  transform: none;
   transition:
     filter 220ms ease,
     transform 360ms ease;
@@ -1414,9 +1414,9 @@ h1 {
     grid-column: auto;
     grid-row: 1;
     justify-self: center;
-    aspect-ratio: 0.88 / 1;
-    min-height: 430px;
-    max-width: 560px;
+    aspect-ratio: 1600 / 1195;
+    min-height: 0;
+    max-width: 720px;
     width: 100%;
   }
 
@@ -1589,10 +1589,10 @@ h1 {
   }
 
   .portrait-panel {
-    aspect-ratio: 0.88 / 1;
+    aspect-ratio: 1600 / 1195;
     min-height: 0;
     max-height: none;
-    width: min(100%, 410px);
+    width: min(100%, 430px);
   }
 
   .portrait-panel picture {
@@ -1600,7 +1600,7 @@ h1 {
   }
 
   .portrait-panel img {
-    object-position: center bottom;
+    object-position: center center;
   }
 
   .work-card.is-short-card .video-frame {
