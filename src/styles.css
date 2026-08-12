@@ -23,11 +23,19 @@ html {
   overflow-x: hidden;
   scroll-padding-top: 92px;
   scroll-behavior: smooth;
+  overscroll-behavior-x: none;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
+  overscroll-behavior-x: none;
   background:
     radial-gradient(circle at 72% 22%, rgba(142, 53, 255, 0.26), transparent 27rem),
     radial-gradient(circle at 18% 34%, rgba(91, 31, 146, 0.28), transparent 30rem),
@@ -77,11 +85,18 @@ img {
   max-width: 100%;
 }
 
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .site-shell {
   --shell-width: min(1840px, calc(100% - 48px));
+  position: relative;
   width: var(--shell-width);
   margin: 0 auto;
   padding: 86px 0 38px;
+  overflow-x: clip;
 }
 
 .site-shell[dir="rtl"] {
@@ -1424,29 +1439,51 @@ h1 {
 
 @media (max-width: 640px) {
   html {
-    scroll-padding-top: 126px;
+    scroll-padding-top: 88px;
   }
 
   .site-shell {
     --shell-width: min(100% - 20px, 1180px);
     width: var(--shell-width);
-    padding-top: 126px;
+    padding-top: 82px;
+    padding-bottom: 92px;
   }
 
   .topbar {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     top: 10px;
+    gap: 8px;
+    min-height: 54px;
+    padding: 7px 8px;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 0.72rem;
   }
 
   .language-link {
     justify-self: end;
+    padding: 8px 7px;
+    font-size: 0.72rem;
   }
 
   .topbar nav {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    justify-content: end;
-    gap: 2px;
+    grid-column: auto;
+    grid-row: auto;
+    flex-wrap: nowrap;
+    justify-content: start;
+    gap: 4px;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .topbar nav::-webkit-scrollbar {
+    display: none;
   }
 
   .site-shell[dir="rtl"] .topbar nav {
@@ -1454,8 +1491,9 @@ h1 {
   }
 
   .topbar nav a {
-    padding: 8px 6px;
-    font-size: 0.72rem;
+    flex: 0 0 auto;
+    padding: 8px 7px;
+    font-size: 0.68rem;
   }
 
   h1 {
@@ -1468,11 +1506,35 @@ h1 {
 
   .hero {
     min-height: auto;
+    gap: 24px;
+    padding: 24px 2px 18px;
   }
 
   .hero-actions,
   .contact-actions {
     flex-direction: column;
+  }
+
+  .hero-copy,
+  .site-shell[dir="rtl"] .hero-copy {
+    max-width: 100%;
+  }
+
+  .hero-copy::before,
+  .site-shell[dir="rtl"] .hero-copy::before {
+    right: 50%;
+    left: auto;
+    width: 150px;
+    transform: translateX(50%);
+  }
+
+  .hero-text {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .name-ribbon {
+    padding: 8px 16px;
   }
 
   .button {
@@ -1481,20 +1543,26 @@ h1 {
 
   .work-side-pagination,
   .site-shell[dir="rtl"] .work-side-pagination {
-    position: static;
+    position: fixed;
+    top: auto;
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+    z-index: 90;
     flex-direction: row;
     height: auto;
-    margin: 0 0 14px;
+    margin: 0;
     gap: 10px;
     transform: none;
   }
 
   .work-side-button {
     width: 100%;
-    height: 44px;
+    height: 46px;
     grid-template-columns: auto auto;
     gap: 8px;
     border-radius: 6px;
+    background: rgba(12, 10, 18, 0.9);
   }
 
   .work-side-button span {
@@ -1521,11 +1589,34 @@ h1 {
   }
 
   .portrait-panel {
-    min-height: 360px;
+    aspect-ratio: 0.92 / 1;
+    min-height: 0;
+    max-height: none;
+    width: min(100%, 430px);
   }
 
   .portrait-panel picture {
     width: 100%;
+  }
+
+  .portrait-panel img {
+    object-position: center top;
+  }
+
+  .work-card.is-short-card .video-frame {
+    min-height: 0;
+  }
+
+  .work-card.is-short-card .video-trigger img {
+    width: min(72%, 300px);
+  }
+
+  .panel-card,
+  .tools-band,
+  .contact-section,
+  .career-timeline article,
+  .work-card {
+    border-radius: 7px;
   }
 }
 
