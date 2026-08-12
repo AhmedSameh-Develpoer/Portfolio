@@ -778,13 +778,6 @@ export default function App() {
           <span className="purple-haze" aria-hidden="true" />
         </div>
 
-        <aside className="focus-panel reveal-on-scroll" aria-label="Portfolio focus areas">
-          {t.focus.map((area) => (
-            <a href="#work" key={area}>
-              <span>{area}</span>
-            </a>
-          ))}
-        </aside>
       </section>
 
       <section
