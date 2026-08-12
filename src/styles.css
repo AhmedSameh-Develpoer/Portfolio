@@ -266,7 +266,7 @@ a {
 }
 
 .site-shell[dir="rtl"] .portrait-panel img {
-  transform: scaleX(-1);
+  transform: none;
 }
 
 .site-shell[dir="rtl"] .contact-actions {
@@ -486,32 +486,20 @@ h1 {
   isolation: isolate;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
-    #050408;
+  background: #c1c1c3;
   box-shadow:
     0 30px 90px rgba(0, 0, 0, 0.48),
     0 0 0 1px rgba(142, 53, 255, 0.12);
 }
 
 .portrait-panel::before {
-  position: absolute;
-  inset: 14% 7% 8%;
-  z-index: 0;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(142, 53, 255, 0.38), transparent 62%);
-  content: "";
-  filter: blur(28px);
+  display: none;
+  content: none;
 }
 
 .portrait-panel::after {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 2;
-  height: 50%;
-  background: linear-gradient(to top, #050408 6%, rgba(5, 4, 8, 0.62) 34%, transparent);
-  content: "";
-  pointer-events: none;
+  display: none;
+  content: none;
 }
 
 .portrait-panel picture {
@@ -526,8 +514,8 @@ h1 {
 .portrait-panel img {
   width: 100%;
   height: 100%;
-  filter: grayscale(0.08) contrast(1.1) brightness(0.9);
-  object-fit: contain;
+  filter: none;
+  object-fit: cover;
   object-position: center center;
   transform: none;
   transition:
@@ -536,15 +524,7 @@ h1 {
 }
 
 .purple-haze {
-  position: absolute;
-  right: 4%;
-  bottom: 9%;
-  z-index: 3;
-  width: 54%;
-  height: 28%;
-  border-radius: 999px;
-  background: rgba(142, 53, 255, 0.26);
-  filter: blur(24px);
+  display: none;
 }
 
 .focus-panel {
