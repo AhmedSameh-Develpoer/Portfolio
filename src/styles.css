@@ -903,13 +903,15 @@ p {
 
 .career-timeline {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   counter-reset: timeline;
 }
 
 .career-timeline article {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding: 26px;
   counter-increment: timeline;
 }
@@ -940,6 +942,14 @@ p {
   margin: 0;
   color: var(--text);
   line-height: 1.7;
+}
+
+.timeline-dates {
+  margin-top: auto;
+  padding-top: 14px;
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 /* ---------- Contact ---------- */

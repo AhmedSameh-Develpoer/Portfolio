@@ -482,4 +482,9 @@ export const services = [
       "\u062a\u0637\u0648\u064a\u0631 \u0641\u064a\u062f\u064a\u0648\u0647\u0627\u062a \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a",
     text: "AI-assisted concepts and scenes using Google Flow, Seedance 2.0, and editing workflows.",
   },
+  {
+    title: "Code-driven motion graphics",
+    titleAr: "موشن جرافيك بالكود والـ AI",
+    text: "Explainers, intros and 2.5D animation built in Remotion and HyperFrames, with AI voiceover and captions.",
+  },
 ];

@@ -87,7 +87,7 @@ const copy = {
     focus: ["YouTubers", "Full-time roles", "Commercials", "Real Estate", "Gaming"],
     eyebrow: "Short-form, Commercials & AI-ready edits",
     heroTitle: "Video Editor",
-    role: "Short-Form & Commercial Video Editor",
+    role: "Short-Form, Commercial & AI Motion Video Editor",
     heroText:
       "I shape raw footage into fast, polished edits that hook early, keep the pace tight, and feel ready for creators, brands, real estate, gaming, and AI-led campaigns.",
     primary: "Contact Me",
@@ -120,7 +120,7 @@ const copy = {
     clients: "Clients",
     metrics: ["Years Experience", "Projects Completed", "Happy Clients"],
     experienceNote:
-      "Editing across creators, brands, real estate, gaming, AI videos, and commercial social content.",
+      "Editing for creators, brands, real estate, gaming and AI videos, now with code-driven motion graphics.",
     extraService: "Color correction & motion graphics",
     contactText:
       "Available for full-time video editing roles and selected collaborations with creators, brands, and commercial teams.",
@@ -148,21 +148,31 @@ const copy = {
       ["AI Video", "Generated scenes shaped into coherent, presentable videos"],
       ["Gaming", "Highlights, review pacing, humor beats, and creator energy"],
     ],
+    // [label, title, text, dates] — kept in step with the CV (cv/ahmed-sameh-cv.html).
     timelineItems: [
       [
         "Real Estate Marketing",
         "EMG Group Developments",
-        "Edited short-form real estate campaigns with a focus on visual clarity, pacing, sound, and brand consistency.",
+        "Edited a recurring series of real estate Reels and the Sun West Mall campaign, mixing AI-generated scenes with project footage.",
+        "Jan 2026 – Sep 2026",
       ],
       [
         "Social Media Content",
         "Upwest Group",
-        "Created social videos built for short-form viewing, clean delivery, and stronger audience engagement.",
+        "Created and edited social videos for digital platforms, adapting each cut for short-form viewing and engagement.",
+        "Jan 2026 – Sep 2026",
       ],
       [
-        "Freelance Collaborations",
-        "Creators & review pages",
-        "Delivered creator edits, subtitles, client revisions, review videos, gaming clips, and commercial-style social content.",
+        "Freelance",
+        "Creators, brands & AI commercials",
+        "53 edits for Ali Q8 and 44 for Beef Q8, plus HeroQ8, Kassar Reviews and Xenon Team, and AI commercials for Van Tech AC, Alnur Air and Nur AC.",
+        "2022 – Present",
+      ],
+      [
+        "AI Motion Design",
+        "Independent projects",
+        "Code-driven motion graphics in Remotion and HyperFrames: Ibn Sina, The Dollar's Journey, a Joi Gaming intro, Mirror City and a Spider-Noir-style opener.",
+        "Nov 2026 – Present",
       ],
     ],
   },
@@ -272,7 +282,7 @@ const portfolioCopy = {
     focus: ["يوتيوبرز", "وظائف ثابتة", "إعلانات", "عقارات", "ألعاب"],
     eyebrow: "شورت فورم | إعلانات | محتوى AI",
     heroTitle: "مونتير",
-    role: "مونتير فيديوهات قصيرة وإعلانات",
+    role: "مونتير فيديوهات قصيرة وإعلانات وموشن بالـ AI",
     heroText:
       "أحوّل اللقطات الخام إلى فيديوهات تشد الانتباه من أول ثانية: إيقاع سريع، قصة واضحة، كابشن مضبوط، وتسليم جاهز للنشر.",
     primary: "تواصل معي",
@@ -302,7 +312,7 @@ const portfolioCopy = {
     clients: "العملاء",
     metrics: ["سنين خبرة", "مشروع مكتمل", "عميل"],
     experienceNote:
-      "خبرة في مونتاج محتوى لصنّاع محتوى، براندات، عقارات، ألعاب، فيديوهات AI، ومحتوى سوشيال تجاري.",
+      "مونتاج لصنّاع محتوى وبراندات وعقارات وألعاب وفيديوهات AI، ودلوقتي كمان موشن جرافيك بالكود.",
     extraService: "تصحيح ألوان وموشن جرافيك",
     contactText:
       "متاح لوظائف مونتاج فيديو بدوام كامل، ولتعاونات مختارة مع صنّاع المحتوى والفرق التجارية.",
@@ -334,17 +344,28 @@ const portfolioCopy = {
       [
         "تسويق عقاري",
         "EMG Group Developments",
-        "مونتاج حملات عقارية قصيرة مع تركيز على وضوح الصورة، الإيقاع، الصوت، وثبات الهوية البصرية.",
+        "سلسلة ريلز عقارية وحملة Sun West Mall، بدمج مشاهد مولّدة بالـ AI مع لقطات المشروع.",
+        "يناير 2026 – سبتمبر 2026",
       ],
       [
         "محتوى سوشيال",
         "Upwest Group",
-        "تجهيز فيديوهات قصيرة مناسبة للمنصات، مصممة لجذب الانتباه وتسليمها بشكل نظيف وجاهز للنشر.",
+        "مونتاج فيديوهات سوشيال لكل منصة، مظبوطة للمشاهدة القصيرة والتفاعل.",
+        "يناير 2026 – سبتمبر 2026",
       ],
       [
-        "تعاونات فريلانس",
-        "صنّاع محتوى وصفحات مراجعات",
-        "تنفيذ مونتاج لصنّاع محتوى، ترجمة، تعديلات عملاء، مراجعات، ألعاب، وفيديوهات تجارية للسوشيال.",
+        "فريلانس",
+        "صنّاع محتوى وبراندات وإعلانات AI",
+        // Keep Arabic "و" attached to an Arabic word: next to Latin text or digits
+        // it stands alone and reads like a "g".
+        "53 فيديو لـ Ali Q8، وكمان 44 فيديو لـ Beef Q8. ومعاهم HeroQ8، Kassar Reviews، Xenon Team، وإعلانات AI لـ Van Tech AC، Alnur Air، Nur AC.",
+        "2022 – الآن",
+      ],
+      [
+        "موشن بالـ AI",
+        "مشاريع شخصية",
+        "موشن جرافيك بالكود في Remotion وفي HyperFrames: ابن سينا، رحلة الدولار، انترو Joi Gaming، Mirror City، وافتتاحية بستايل Spider Noir.",
+        "نوفمبر 2026 – الآن",
       ],
     ],
   },
@@ -1038,7 +1059,16 @@ export default function App() {
             <em>Google Flow</em>
             <em>Seedance 2.0</em>
             <em>Veo</em>
+            <em>Nano Banana</em>
             <em>Magnific</em>
+          </div>
+          <div className="tool-group">
+            <span>{isArabic ? "موشن بالكود والأتمتة" : "Motion code & automation"}</span>
+            <em>Remotion</em>
+            <em>HyperFrames</em>
+            <em>Claude Code</em>
+            <em>ElevenLabs</em>
+            <em>Whisper</em>
           </div>
         </div>
       </section>
@@ -1051,11 +1081,12 @@ export default function App() {
           </div>
         </div>
         <div className="career-timeline">
-          {t.timelineItems.map(([label, title, text]) => (
+          {t.timelineItems.map(([label, title, text, dates]) => (
             <article key={title}>
               <span>{label}</span>
               <h3>{title}</h3>
               <p>{text}</p>
+              <small className="timeline-dates">{dates}</small>
             </article>
           ))}
         </div>
