@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ahmed Sameh – CV</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --ink: #14181a;
+    --text: #2f3a3d;
+    --muted: #66757a;
+    --accent: #2c6e73;
+    --warm: #c97a2e;
+    --line: #d7e0e1;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9eded; }
+  body {
+    color: var(--text);
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.36;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 12mm 15mm 10mm;
+  }
+  @media print { html, body { background: #fff; } .page { margin: 0; } }
+
+  header { border-bottom: 2px solid var(--accent); padding-bottom: 7px; margin-bottom: 9px; }
+  h1 { margin: 0; color: var(--ink); font-size: 22pt; line-height: 1.1; }
+  .role { margin: 2px 0 6px; color: var(--accent); font-size: 12pt; font-weight: 700; }
+  .contact { display: flex; flex-wrap: wrap; gap: 3px 14px; color: var(--muted); font-size: 9.5pt; }
+  .contact a { color: var(--text); text-decoration: none; }
+  .contact b { color: var(--ink); font-weight: 600; }
+
+  h2 {
+    margin: 9px 0 4px;
+    color: var(--accent);
+    font-size: 10.5pt;
+    /* No letter-spacing: PDF text extraction (and so ATS parsers) would read
+       spaced headings as "E X P E R I E N C E". */
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+  }
+  p { margin: 0; }
+  ul { margin: 3px 0 0; padding-left: 15px; }
+  li { margin: 1px 0; }
+  li::marker { color: var(--warm); }
+
+  .job { margin-top: 6px; }
+  .job-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .job-title { color: var(--ink); font-weight: 700; }
+  .job-title span { color: var(--accent); font-weight: 600; }
+  .date { color: var(--muted); font-size: 9.5pt; white-space: nowrap; }
+  .samples { margin-top: 2px; font-size: 9.5pt; color: var(--muted); }
+  .samples a { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+  .skills { display: grid; grid-template-columns: 168px 1fr; gap: 3px 10px; }
+  .skills dt { white-space: nowrap; }
+  .skills dt { color: var(--ink); font-weight: 700; }
+  .skills dd { margin: 0; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+  strong { color: var(--ink); }
+
+  /* Print edition (open with ?print): paper has no clickable links, so URLs are
+     written out and a QR code opens the portfolio; light greys are darkened so
+     black-and-white printers keep them legible. */
+  .print-only, .qr { display: none; }
+  html.print {
+    --text: #1f2628;
+    --muted: #3c4649;
+    --accent: #1d4f53;
+    --warm: #1d4f53;
+    --line: #9fb0b2;
+  }
+  html.print .page { padding: 14mm 15mm 13mm; }
+  html.print .screen-only { display: none; }
+  html.print .print-only { display: inline; }
+  html.print header { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; align-items: end; }
+  html.print .qr { display: block; color: var(--muted); font-size: 8pt; text-align: center; }
+  html.print .qr img { display: block; width: 22mm; height: 22mm; margin: 0 auto 2px; }
+</style>
+<script>
+  if (location.search.includes("print")) document.documentElement.classList.add("print");
+</script>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <h1>AHMED SAMEH MOHAMED ZAIN</h1>
+      <p class="role">Short-Form, Commercial &amp; AI Motion Video Editor</p>
+      <div class="contact">
+        <span>Egypt</span>
+        <span><b>+20 101 003 2851</b> (WhatsApp)</span>
+        <span>+20 103 039 5062</span>
+        <a href="mailto:ahmedsameh2465@gmail.com">ahmedsameh2465@gmail.com</a>
+        <a href="https://www.linkedin.com/in/ahmed-sameh-97010a333">linkedin.com/in/ahmed-sameh-97010a333</a>
+        <a href="https://ahmedsameh-develpoer.github.io/Portfolio/"><b>Portfolio:</b> ahmedsameh-develpoer.github.io/Portfolio</a>
+      </div>
+    </div>
+    <div class="qr">
+      <img src="portfolio-qr.svg" alt="QR code to the video portfolio">
+      Scan for my work
+    </div>
+  </header>
+
+  <h2>Summary</h2>
+  <p>
+    Video editor with 4+ years of hook-first short-form, commercial, real estate and gaming edits for brands and
+    creators (100+ projects, 30+ clients). Now adding AI-assisted motion design: code-driven motion graphics in
+    Remotion and HyperFrames, and AI commercials with Google Flow, Veo and Seedance.
+  </p>
+
+  <h2>Experience</h2>
+
+  <div class="job">
+    <div class="job-head">
+      <div class="job-title">EMG Group Developments <span>· Video Editor, Real Estate</span></div>
+      <div class="date">Jan 2026 – Sep 2026</div>
+    </div>
+    <ul>
+      <li>Edited a recurring series of real estate Reels on developer trust, location value and investment, built around a strong hook, captions, sound and brand consistency.</li>
+      <li>Produced the <strong>Sun West Mall</strong> campaign, combining AI-generated scenes with project footage.</li>
+    </ul>
+    <p class="samples">Samples:
+      <span class="screen-only"><a href="https://www.facebook.com/elmostafarealestate/reels/">Facebook Reels</a> · <a href="https://ahmedsameh-develpoer.github.io/Portfolio/">Portfolio &gt; Real Estate</a></span>
+      <span class="print-only">fb.com/elmostafarealestate/reels · Portfolio QR above</span></p>
+  </div>
+
+  <div class="job">
+    <div class="job-head">
+      <div class="job-title">Upwest Group <span>· Video Editor, Social Media</span></div>
+      <div class="date">Jan 2026 – Sep 2026</div>
+    </div>
+    <ul>
+      <li>Created and edited social video content for digital platforms, adapting each cut for short-form viewing and audience engagement.</li>
+    </ul>
+    <p class="samples">Samples:
+      <span class="screen-only"><a href="https://www.facebook.com/profile.php?id=100087308047695&amp;sk=reels_tab">Facebook Reels</a></span>
+      <span class="print-only">fb.com/profile.php?id=100087308047695</span></p>
+  </div>
+
+  <div class="job">
+    <div class="job-head">
+      <div class="job-title">Freelance <span>· Creators, Brands &amp; AI Commercials</span></div>
+      <div class="date">2022 – Present</div>
+    </div>
+    <ul>
+      <li>Delivered <strong>53 edits for Ali Q8</strong> (vlogs, reviews, food content) and <strong>44 for Beef Q8</strong> (gaming explainers with motion graphics and subtitles).</li>
+      <li>Also edited for HeroQ8, Kassar Reviews, Xenon Team, Khaled Q8, Thorned and Violetism, applying client feedback across platforms.</li>
+      <li>AI-assisted commercials for air-conditioning brands <strong>Van Tech AC, Alnur Air and Nur AC</strong>; restaurant promo for <strong>City Crib</strong>; brand work for B Divya and Summit Air.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="job-head">
+      <div class="job-title">AI-Assisted Motion Design &amp; Automation <span>· Independent projects</span></div>
+      <div class="date">Nov 2026 – Present</div>
+    </div>
+    <ul>
+      <li>Build code-driven motion graphics in Remotion and HyperFrames, directing Claude Code as an AI pair: explainers (<strong>Ibn Sina</strong>, <strong>The Dollar's Journey</strong>), a channel intro (<strong>Joi Gaming</strong>) and cinematic shorts (<strong>Mirror City</strong>, a Spider-Noir-style opener).</li>
+      <li>Create 2.5D animation from stills (AI cut-outs, inpainting, upscaling, MediaPipe face rigs with lip sync) and Arabic voiceover with word-timed captions (ElevenLabs, faster-whisper).</li>
+      <li>Turn reference videos into reusable production workflows (style bible, pilot, then a reusable skill), and set up my portfolio site to add new Drive uploads automatically, described by Gemini.</li>
+    </ul>
+  </div>
+
+  <h2>Skills</h2>
+  <dl class="skills">
+    <dt>Editing &amp; Design</dt>
+    <dd>Adobe Premiere Pro, After Effects, Photoshop, CapCut, Canva</dd>
+    <dt>AI Video &amp; Image</dt>
+    <dd>Google Flow, Veo, Seedance 2.0, Nano Banana, Magnific, ElevenLabs</dd>
+    <dt>Motion &amp; Automation</dt>
+    <dd>Remotion, HyperFrames, Claude Code, faster-whisper, Real-ESRGAN, MediaPipe, Google Apps Script</dd>
+    <dt>Craft</dt>
+    <dd>Hooks and retention pacing, Arabic &amp; English captions, sound design, color correction, scriptwriting, creative ideation, client feedback</dd>
+  </dl>
+
+  <div class="two">
+    <div>
+      <h2>Education</h2>
+      <p><strong>BSc Computer Science</strong> · MTI University · 2023</p>
+    </div>
+    <div>
+      <h2>Languages</h2>
+      <p>Arabic (native) · English (B2)</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
