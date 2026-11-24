@@ -1112,6 +1112,10 @@ export default function App() {
             <small>WhatsApp</small>
             <strong dir="ltr">{contact.phoneDisplay}</strong>
           </a>
+          <a className="contact-link" href={contact.phoneAltHref}>
+            <small>{isArabic ? "رقم تاني" : "Phone"}</small>
+            <strong dir="ltr">{contact.phoneAlt}</strong>
+          </a>
           <a className="contact-link" href={`mailto:${contact.email}`}>
             <small>{isArabic ? "الإيميل" : "Email"}</small>
             <strong dir="ltr">{contact.email}</strong>
