@@ -157,15 +157,15 @@ const copy = {
         "Jan 2026 – Sep 2026",
       ],
       [
-        "Social Media Content",
+        "Real Estate Marketing",
         "Upwest Group",
-        "Created and edited social videos for digital platforms, adapting each cut for short-form viewing and engagement.",
+        "Edited short-form property videos for the developer's social channels, cut for quick viewing and clear project messaging.",
         "Jan 2026 – Sep 2026",
       ],
       [
-        "Freelance",
-        "Creators, brands & AI commercials",
-        "53 edits for Ali Q8 and 44 for Beef Q8, plus HeroQ8, Kassar Reviews and Xenon Team, and AI commercials for Van Tech AC, Alnur Air and Nur AC.",
+        "Social Media & Creators",
+        "Ali Al5baz (Ali Q8) & creators",
+        "53 edits for Ali Al5baz (vlogs, reviews, food) and 44 for Beef Q8, plus HeroQ8, Kassar Reviews and Xenon Team, and AI commercials for Van Tech AC, Alnur Air and Nur AC.",
         "2022 – Present",
       ],
       [
@@ -348,17 +348,17 @@ const portfolioCopy = {
         "يناير 2026 – سبتمبر 2026",
       ],
       [
-        "محتوى سوشيال",
+        "تسويق عقاري",
         "Upwest Group",
-        "مونتاج فيديوهات سوشيال لكل منصة، مظبوطة للمشاهدة القصيرة والتفاعل.",
+        "مونتاج فيديوهات عقارية قصيرة لصفحات الشركة، بإيقاع سريع ورسالة واضحة عن كل مشروع.",
         "يناير 2026 – سبتمبر 2026",
       ],
       [
-        "فريلانس",
-        "صنّاع محتوى وبراندات وإعلانات AI",
+        "سوشيال ميديا وصنّاع محتوى",
+        "Ali Al5baz (Ali Q8) وصنّاع محتوى",
         // Keep Arabic "و" attached to an Arabic word: next to Latin text or digits
         // it stands alone and reads like a "g".
-        "53 فيديو لـ Ali Q8، وكمان 44 فيديو لـ Beef Q8. ومعاهم HeroQ8، Kassar Reviews، Xenon Team، وإعلانات AI لـ Van Tech AC، Alnur Air، Nur AC.",
+        "53 فيديو لـ Ali Al5baz (فلوجات، مراجعات، أكل)، وكمان 44 فيديو لـ Beef Q8. ومعاهم HeroQ8، Kassar Reviews، Xenon Team، وإعلانات AI لـ Van Tech AC، Alnur Air، Nur AC.",
         "2022 – الآن",
       ],
       [
