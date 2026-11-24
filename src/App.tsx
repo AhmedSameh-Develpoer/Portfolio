@@ -1,9 +1,13 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState, type CSSProperties } from "react";
+import { fetchDriveWork, mergeDriveWork, type DriveSyncResult } from "./drive-sync";
 import {
   clientGroups,
   contact,
+  driveSyncEndpoint,
   portfolioWork,
   services,
+  showreelVideo,
+  type PortfolioItem,
   type WorkCategory,
 } from "./portfolio-data";
 
@@ -268,7 +272,7 @@ const portfolioCopy = {
     focus: ["يوتيوبرز", "وظائف ثابتة", "إعلانات", "عقارات", "ألعاب"],
     eyebrow: "شورت فورم | إعلانات | محتوى AI",
     heroTitle: "مونتير",
-    role: "Short-Form & Commercial Video Editor",
+    role: "مونتير فيديوهات قصيرة وإعلانات",
     heroText:
       "أحوّل اللقطات الخام إلى فيديوهات تشد الانتباه من أول ثانية: إيقاع سريع، قصة واضحة، كابشن مضبوط، وتسليم جاهز للنشر.",
     primary: "تواصل معي",
@@ -293,10 +297,10 @@ const portfolioCopy = {
     together: "خلّينا نطلع نسخة الناس تكملها للنهاية",
     tools: "الأدوات والمهارات",
     services: "الخدمات",
-    whatEdit: "أنواع المحتوى التي أحررها",
+    whatEdit: "أنواع المحتوى اللي بشتغل عليها",
     experience: "الخبرة",
     clients: "العملاء",
-    metrics: ["سنوات خبرة", "مشروع مكتمل", "عميل تعاملت معه"],
+    metrics: ["سنين خبرة", "مشروع مكتمل", "عميل"],
     experienceNote:
       "خبرة في مونتاج محتوى لصنّاع محتوى، براندات، عقارات، ألعاب، فيديوهات AI، ومحتوى سوشيال تجاري.",
     extraService: "تصحيح ألوان وموشن جرافيك",
@@ -404,16 +408,21 @@ const displayFeaturedWork = portfolioWork.map((item) => ({
   ...(item.youtubeUrl ? item : { ...item, ...workPresentation[item.category] }),
 }));
 
-function getWorkCategories(item: (typeof displayFeaturedWork)[number]) {
+function getWorkCategories(item: PortfolioItem) {
   return item.categories ?? [item.category];
 }
 
-const availableWorkFilters: WorkFilter[] = [
-  "All",
-  ...categoryOrder.filter((category) =>
-    displayFeaturedWork.some((item) => getWorkCategories(item).includes(category)),
-  ),
-];
+function getAvailableWorkFilters(items: PortfolioItem[]): WorkFilter[] {
+  return [
+    "All",
+    ...categoryOrder.filter((category) =>
+      items.some((item) => getWorkCategories(item).includes(category)),
+    ),
+  ];
+}
+
+// ?admin (or ?admin=<REFRESH_TOKEN>) shows the Drive refresh button.
+const adminToken = new URLSearchParams(window.location.search).get("admin");
 
 const displayServices = services.map((service) => {
   const presentation = {
@@ -543,6 +552,11 @@ function getVideoThumbnailUrl(url: string) {
   return driveFileId ? `https://drive.google.com/thumbnail?id=${driveFileId}&sz=w1200` : "";
 }
 
+// YouTube thumbnails only: Drive thumbnails break when a file is not public.
+const reelThumbnails = displayFeaturedWork
+  .map((item) => getYouTubeThumbnailUrl(item.youtubeUrl))
+  .filter(Boolean);
+
 function LazyVideo({
   title,
   url,
@@ -557,8 +571,12 @@ function LazyVideo({
   slotLabel: string;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
+  // Drive thumbnails fail when the file is not shared publicly.
+  const [hasThumbnailError, setHasThumbnailError] = useState(false);
   const embedUrl = getVideoEmbedUrl(url);
   const thumbnailUrl = getVideoThumbnailUrl(url);
+  // YouTube thumbnails of vertical videos are 4:3 with black bars on the sides.
+  const isLetterboxed = Boolean(getYouTubeVideoId(url));
 
   if (!embedUrl) {
     return (
@@ -592,8 +610,15 @@ function LazyVideo({
       onClick={() => setIsLoaded(true)}
       aria-label={`${loadLabel}: ${title}`}
     >
-      {thumbnailUrl ? (
-        <img src={thumbnailUrl} alt="" loading="lazy" decoding="async" />
+      {thumbnailUrl && !hasThumbnailError ? (
+        <img
+          className={isLetterboxed ? "is-letterboxed" : undefined}
+          src={thumbnailUrl}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setHasThumbnailError(true)}
+        />
       ) : (
         <span className="thumbnail-fallback" aria-hidden="true" />
       )}
@@ -605,9 +630,7 @@ function LazyVideo({
 
 export default function App() {
   const [appState, dispatch] = useReducer(appReducer, undefined, createInitialState);
-  const [isWorkNavVisible, setIsWorkNavVisible] = useState(false);
   const languageTimers = useRef<number[]>([]);
-  const workSectionRef = useRef<HTMLElement | null>(null);
   const { activeCategory, isLanguageTransitioning, language, workPage } = appState;
   const isArabic = language === "ar";
   const t = portfolioCopy[language];
@@ -680,7 +703,9 @@ export default function App() {
           }
         });
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.16 },
+      // threshold 0: tall sections (the work grid on phones) never reach a
+      // larger visible ratio on short screens and would stay hidden.
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
     );
 
     revealTargets.forEach((target) => observer.observe(target));
@@ -691,23 +716,53 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
-    const workSection = workSectionRef.current;
-    if (!workSection) {
-      return undefined;
+  // The last Drive feed is cached per browser so returning visitors see synced
+  // videos immediately; Apps Script can take several seconds to answer.
+  const [driveSync, setDriveSync] = useState<DriveSyncResult | null>(() => {
+    try {
+      const cached = window.localStorage.getItem("drive-sync-cache");
+      return cached ? (JSON.parse(cached) as DriveSyncResult) : null;
+    } catch {
+      return null;
     }
+  });
+  const [driveSyncState, setDriveSyncState] = useState<"idle" | "loading" | "error">("idle");
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsWorkNavVisible(entry.isIntersecting),
-      { rootMargin: "-18% 0px -22% 0px", threshold: 0.01 },
-    );
+  const loadDriveWork = (refresh: boolean) => {
+    if (!driveSyncEndpoint) {
+      return;
+    }
+    setDriveSyncState("loading");
+    fetchDriveWork(driveSyncEndpoint, { refresh, token: adminToken || undefined })
+      .then((result) => {
+        setDriveSync(result);
+        setDriveSyncState(result.error ? "error" : "idle");
+        try {
+          window.localStorage.setItem("drive-sync-cache", JSON.stringify(result));
+        } catch {
+          // Storage can be full or blocked; the live result is still shown.
+        }
+      })
+      .catch(() => setDriveSyncState("error"));
+  };
 
-    observer.observe(workSection);
+  useEffect(() => loadDriveWork(false), []);
 
-    return () => observer.disconnect();
-  }, []);
-
-  const orderedWork = displayFeaturedWork;
+  const orderedWork = useMemo(
+    () =>
+      mergeDriveWork(displayFeaturedWork, driveSync, getDriveFileId).map((item) =>
+        item.description
+          ? item
+          : {
+              ...item,
+              description: workPresentation[item.category].description,
+              descriptionAr: workPresentation[item.category].descriptionAr,
+              role: item.role || workPresentation[item.category].role,
+            },
+      ),
+    [driveSync],
+  );
+  const availableWorkFilters = useMemo(() => getAvailableWorkFilters(orderedWork), [orderedWork]);
   const filteredWork =
     activeCategory === "All"
       ? orderedWork
@@ -746,11 +801,22 @@ export default function App() {
       </header>
 
       <section className="hero" id="home">
+        <div className="hero-stage">
+          <img
+            className="hero-photo"
+            src={assetPath("assets/hero-photo.webp")}
+            alt="Ahmed Sameh professional portrait"
+            decoding="async"
+            fetchPriority="high"
+          />
+          <h1 className="hero-name">Ahmed Sameh</h1>
+        </div>
+
         <div className="hero-copy reveal-on-scroll">
-          <p className="eyebrow">{t.eyebrow}</p>
-          <h1>{t.heroTitle}</h1>
-          <p className="name-ribbon">Ahmed Sameh</p>
-          <p className="title-line">{t.role}</p>
+          <div className="hero-intro">
+            <p className="eyebrow">{t.eyebrow}</p>
+            <p className="title-line">{t.role}</p>
+          </div>
           <p className="hero-text">{t.heroText}</p>
           <div className="hero-actions" aria-label="Primary actions">
             <a className="button primary" href={contact.whatsapp}>
@@ -764,27 +830,21 @@ export default function App() {
             </a>
           </div>
         </div>
-
-        <div className="portrait-panel reveal-on-scroll" aria-label="Ahmed Sameh portrait">
-          <picture>
-            <source srcSet={assetPath("assets/ahmed-sameh-portrait.webp")} type="image/webp" />
-            <img
-              src={assetPath("assets/ahmed-sameh-portrait.png")}
-              alt="Ahmed Sameh professional portrait"
-              decoding="async"
-              fetchPriority="high"
-            />
-          </picture>
-          <span className="purple-haze" aria-hidden="true" />
-        </div>
-
       </section>
 
-      <section
-        className="section work-section reveal-on-scroll"
-        id="work"
-        ref={workSectionRef}
-      >
+      <div className="reel-strip" aria-hidden="true">
+        {showreelVideo ? (
+          <video src={assetPath(showreelVideo)} autoPlay muted loop playsInline />
+        ) : (
+          <div className="reel-row">
+            {[...reelThumbnails, ...reelThumbnails].map((src, index) => (
+              <img src={src} alt="" key={index} loading="lazy" decoding="async" />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <section className="section work-section reveal-on-scroll" id="work">
         <div className="section-heading compact-heading">
           <div>
             <p className="eyebrow">{t.featured}</p>
@@ -794,6 +854,45 @@ export default function App() {
             {t.portfolio}
           </a>
         </div>
+
+        {adminToken !== null ? (
+          <div className="drive-sync-bar" role="status">
+            <button
+              className="pager-button"
+              type="button"
+              disabled={!driveSyncEndpoint || driveSyncState === "loading"}
+              onClick={() => loadDriveWork(true)}
+            >
+              {driveSyncState === "loading"
+                ? isArabic
+                  ? "جاري الفحص..."
+                  : "Checking Drive..."
+                : isArabic
+                  ? "تحديث من Drive"
+                  : "Refresh from Drive"}
+            </button>
+            <span>
+              {!driveSyncEndpoint
+                ? isArabic
+                  ? "ضيف رابط الـ Apps Script في driveSyncEndpoint"
+                  : "Set driveSyncEndpoint to the Apps Script URL"
+                : driveSyncState === "error"
+                  ? isArabic
+                    ? `حصل خطأ${driveSync?.error ? `: ${driveSync.error}` : ""}`
+                    : `Sync failed${driveSync?.error ? `: ${driveSync.error}` : ""}`
+                  : driveSync
+                    ? isArabic
+                      ? `${driveSync.items.length} فيديو من Drive · اتوصف ${driveSync.processed} جديد · آخر فحص ${driveSync.updatedAt ? new Date(driveSync.updatedAt).toLocaleString("ar-EG") : "—"}`
+                      : `${driveSync.items.length} Drive videos · ${driveSync.processed} newly described · last check ${driveSync.updatedAt ? new Date(driveSync.updatedAt).toLocaleString("en-GB") : "—"}`
+                    : ""}
+              {driveSync?.failed.length
+                ? isArabic
+                  ? ` · ${driveSync.failed.length} فشل: ${driveSync.failed.map((item) => item.name).join("، ")}`
+                  : ` · ${driveSync.failed.length} failed: ${driveSync.failed.map((item) => item.name).join(", ")}`
+                : ""}
+            </span>
+          </div>
+        ) : null}
 
         <div className="category-filter" aria-label={t.filterLabel}>
           {availableWorkFilters.map((category) => (
@@ -808,55 +907,19 @@ export default function App() {
           ))}
         </div>
 
-        {hasWorkPagination ? (
-          <div className="work-page-status">
-            {t.pageLabel} {currentWorkPage + 1} / {totalWorkPages}
-          </div>
-        ) : null}
-
-        {hasWorkPagination ? (
-          <div
-            className={`work-side-pagination${isWorkNavVisible ? " is-visible" : ""}`}
-            aria-label="Work pagination"
-          >
-            <button
-              className="work-side-button is-prev"
-              type="button"
-              disabled={currentWorkPage === 0}
-              onClick={() =>
-                dispatch({ type: "set-work-page", page: currentWorkPage - 1 })
-              }
-            >
-              <span>{t.previousPage}</span>
-              <strong aria-hidden="true">&lt;</strong>
-            </button>
-            <button
-              className="work-side-button is-next"
-              type="button"
-              disabled={currentWorkPage >= totalWorkPages - 1}
-              onClick={() =>
-                dispatch({ type: "set-work-page", page: currentWorkPage + 1 })
-              }
-            >
-              <span>{t.nextPage}</span>
-              <strong aria-hidden="true">&gt;</strong>
-            </button>
-          </div>
-        ) : null}
-
-        <div className="work-grid featured-row">
-          {visibleWork.map((item) => {
+        <div className="work-grid">
+          {visibleWork.map((item, index) => {
             const itemCategories = getWorkCategories(item);
             const visibleCategory =
               activeCategory !== "All" && itemCategories.includes(activeCategory)
                 ? activeCategory
                 : item.category;
-            const isShortFormat = itemCategories.includes("Shorts");
+            const isFeatured = index === 0;
 
             return (
               <article
-                className={`work-card${isShortFormat ? " is-short-card" : ""}`}
-                key={item.title}
+                className={`work-card${isFeatured ? " is-featured" : ""}`}
+                key={item.youtubeUrl || item.title}
               >
                 <div className="video-frame">
                   <LazyVideo
@@ -870,7 +933,9 @@ export default function App() {
                 <div className="work-copy">
                   <span>{displayCategoryLabels[visibleCategory][language]}</span>
                   <h4>{isArabic ? item.titleAr : item.title}</h4>
-                  <p>{isArabic ? item.descriptionAr : item.description}</p>
+                  {isFeatured ? (
+                    <p>{isArabic ? item.descriptionAr : item.description}</p>
+                  ) : null}
                   <small>{item.role}</small>
                 </div>
               </article>
@@ -878,48 +943,80 @@ export default function App() {
           })}
         </div>
 
+        {hasWorkPagination ? (
+          <div className="work-pager" aria-label="Work pagination">
+            <button
+              className="pager-button"
+              type="button"
+              disabled={currentWorkPage === 0}
+              onClick={() =>
+                dispatch({ type: "set-work-page", page: currentWorkPage - 1 })
+              }
+            >
+              {t.previousPage}
+            </button>
+            <span>
+              {t.pageLabel} {currentWorkPage + 1} / {totalWorkPages}
+            </span>
+            <button
+              className="pager-button"
+              type="button"
+              disabled={currentWorkPage >= totalWorkPages - 1}
+              onClick={() =>
+                dispatch({ type: "set-work-page", page: currentWorkPage + 1 })
+              }
+            >
+              {t.nextPage}
+            </button>
+          </div>
+        ) : null}
       </section>
 
-      <section className="dashboard-grid reveal-on-scroll" aria-label="Portfolio details">
-        <article className="panel-card services-panel" id="services">
+      <section className="stats-band reveal-on-scroll" id="experience" aria-label={t.experience}>
+        {["4+", "100+", "30+"].map((metric, index) => (
+          <div className="stat" key={metric}>
+            <strong>{metric}</strong>
+            <span>{t.metrics[index]}</span>
+          </div>
+        ))}
+        <p className="stats-note">{t.experienceNote}</p>
+      </section>
+
+      <section className="section services-section reveal-on-scroll" id="services">
+        <div className="section-heading">
           <p className="eyebrow">{t.services}</p>
           <h2>{t.whatEdit}</h2>
-          <ul>
-            {displayServices.map((service) => (
-              <li key={service.title}>{isArabic ? service.titleAr : service.title}</li>
-            ))}
-            <li>{t.extraService}</li>
-          </ul>
-        </article>
+        </div>
+        <ol className="services-list">
+          {[
+            ...displayServices.map((service) => (isArabic ? service.titleAr : service.title)),
+            t.extraService,
+          ].map((title, index) => (
+            <li key={title}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              {title}
+            </li>
+          ))}
+        </ol>
+      </section>
 
-        <article className="panel-card experience-panel" id="experience">
-          <p className="eyebrow">{t.experience}</p>
-          <div className="metric-row">
-            {["4+", "100+", "30+"].map((metric, index) => (
-              <div key={metric}>
-                <strong>{metric}</strong>
-                <span>{t.metrics[index]}</span>
-              </div>
-            ))}
+      <section className="clients-section reveal-on-scroll" id="clients">
+        <p className="eyebrow">{t.clients}</p>
+        <div className="clients-marquee">
+          <div className="clients-row">
+            {[0, 1].map((copyIndex) =>
+              displayClientGroups.flatMap((group) => group.clients).map((client) => (
+                <span
+                  className={/[؀-ۿ]/.test(client) ? "is-arabic" : undefined}
+                  key={`${copyIndex}-${client}`}
+                  aria-hidden={copyIndex === 1}
+                >
+                  {client}
+                </span>
+              )),
+            )}
           </div>
-          <p className="experience-note">{t.experienceNote}</p>
-        </article>
-
-        <article className="panel-card client-panel" id="clients">
-          <p className="eyebrow">{t.clients}</p>
-          <div className="client-groups">
-            {displayClientGroups.map((group) => (
-              <section className="client-group" key={group.title}>
-                <h3>{isArabic ? group.titleAr : group.title}</h3>
-                <div className="client-list">
-                  {group.clients.map((client) => (
-                    <span key={client}>{client}</span>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </article>
+        </div>
       </section>
 
       <section className="tools-band reveal-on-scroll" id="tools">
@@ -927,28 +1024,21 @@ export default function App() {
         <div className="tool-groups">
           <div className="tool-group">
             <span>{isArabic ? "مونتاج" : "Editing"}</span>
-            <div className="tool-list">
-              <strong>Pr</strong>
-              <em>CapCut</em>
-            </div>
+            <em>Premiere Pro</em>
+            <em>CapCut</em>
           </div>
           <div className="tool-group">
             <span>{isArabic ? "موشن وتصميم" : "Motion & Design"}</span>
-            <div className="tool-list">
-              <strong>Ae</strong>
-              <strong>Ps</strong>
-              <em>After Effects</em>
-              <em>Canva</em>
-            </div>
+            <em>After Effects</em>
+            <em>Photoshop</em>
+            <em>Canva</em>
           </div>
           <div className="tool-group">
             <span>{isArabic ? "فيديوهات AI" : "AI Video"}</span>
-            <div className="tool-list">
-              <em>Google Flow</em>
-              <em>Seedance 2.0</em>
-              <em>Veo</em>
-              <em>Magnific</em>
-            </div>
+            <em>Google Flow</em>
+            <em>Seedance 2.0</em>
+            <em>Veo</em>
+            <em>Magnific</em>
           </div>
         </div>
       </section>
@@ -971,22 +1061,33 @@ export default function App() {
         </div>
       </section>
 
-      <section className="contact-section reveal-on-scroll" id="contact">
-        <div>
+      <section
+        className="contact-section reveal-on-scroll"
+        id="contact"
+        style={
+          {
+            "--contact-backdrop": `url(${assetPath("assets/contact-backdrop.webp")})`,
+          } as CSSProperties
+        }
+      >
+        <div className="contact-intro">
           <p className="eyebrow">{t.ready}</p>
           <h2>{t.together}</h2>
           <p>{t.contactText}</p>
         </div>
 
-        <div className="contact-actions">
-          <a className="button primary" href={contact.whatsapp}>
-            WhatsApp {contact.phoneDisplay}
+        <div className="contact-links">
+          <a className="contact-link is-primary" href={contact.whatsapp}>
+            <small>WhatsApp</small>
+            <strong dir="ltr">{contact.phoneDisplay}</strong>
           </a>
-          <a className="button secondary" href={`mailto:${contact.email}`}>
-            {contact.email}
+          <a className="contact-link" href={`mailto:${contact.email}`}>
+            <small>{isArabic ? "الإيميل" : "Email"}</small>
+            <strong dir="ltr">{contact.email}</strong>
           </a>
-          <a className="button ghost" href={contact.linkedin}>
-            LinkedIn
+          <a className="contact-link" href={contact.linkedin}>
+            <small>LinkedIn</small>
+            <strong dir="ltr">Ahmed Sameh</strong>
           </a>
         </div>
       </section>

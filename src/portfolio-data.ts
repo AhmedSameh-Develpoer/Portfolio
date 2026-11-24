@@ -15,6 +15,9 @@ export type PortfolioItem = {
   description: string;
   descriptionAr: string;
   role: string;
+  // ISO date the video was uploaded; the work grid is sorted newest first.
+  // Drive videos get theirs from the Drive sync, so they can leave it out.
+  uploadedAt?: string;
 };
 
 export const contact = {
@@ -102,6 +105,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=yqOLDiGcGcE&list=PLETshD1aXTPU",
+    uploadedAt: "2026-08-11T14:00:37.000Z",
     description:
       "Real estate reel built around location value, business fit, pacing, captions, and a clear investment message.",
     descriptionAr:
@@ -114,6 +118,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=jEpBam52q30&list=PLETshD1aXTPU",
+    uploadedAt: "2026-07-30T12:52:48.000Z",
     description:
       "Property investment short focused on trust, developer credibility, clean cuts, and polished social delivery.",
     descriptionAr:
@@ -126,6 +131,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=cB9yA4Uhm0I&list=PLETshD1aXTPU",
+    uploadedAt: "2026-07-29T14:00:26.000Z",
     description:
       "Business and property reel shaped around a strong hook, concise message, subtitles, and retention pacing.",
     descriptionAr:
@@ -138,6 +144,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=3NbTkjf1a-o&list=PLETshD1aXTPU",
+    uploadedAt: "2026-07-22T14:00:14.000Z",
     description:
       "Real estate credibility reel edited for confident pacing, clear subtitles, and a polished brand tone.",
     descriptionAr:
@@ -150,6 +157,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=6QKYAMKetXs&list=PLETshD1aXTPU",
+    uploadedAt: "2026-07-21T14:00:08.000Z",
     description:
       "Investment-focused real estate short with clean structure, visual clarity, and platform-ready pacing.",
     descriptionAr:
@@ -162,6 +170,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=koeq2vOsIkY&list=PLETshD1aXTPU",
+    uploadedAt: "2026-07-11T14:00:25.000Z",
     description:
       "Real estate social edit built around proof, grounded messaging, captions, and a clean final rhythm.",
     descriptionAr:
@@ -174,6 +183,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=BtZTWALsFE4&list=PLETshD1aXTPU",
+    uploadedAt: "2026-05-23T14:51:55.000Z",
     description:
       "Location-focused property reel edited for a direct hook, clean message, and strong short-form delivery.",
     descriptionAr:
@@ -186,6 +196,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Shorts",
     categories: ["Shorts"],
     youtubeUrl: "https://www.youtube.com/watch?v=NXy0U6Ia1lY&list=PLETshD1aXTPU",
+    uploadedAt: "2026-06-14T02:08:33.000Z",
     description:
       "Subtitle-led short-form edit focused on pacing, readable captions, and a clean viewing rhythm.",
     descriptionAr:
@@ -198,6 +209,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Commercials",
     categories: ["Shorts", "Commercials"],
     youtubeUrl: "https://www.youtube.com/watch?v=klMF1An1gOg&list=PLETshD1aXTPU",
+    uploadedAt: "2026-06-13T07:54:15.000Z",
     description:
       "Restaurant promo edit shaped for quick appetite appeal, clear pacing, and social-friendly delivery.",
     descriptionAr:
@@ -210,6 +222,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Commercials",
     categories: ["Shorts", "AI Videos", "Commercials"],
     youtubeUrl: "https://www.youtube.com/watch?v=--9Z5h71gHQ&list=PLETshD1aXTPU",
+    uploadedAt: "2026-06-13T07:51:02.000Z",
     description:
       "AI-assisted commercial concept for an air-conditioning brand, edited into a clear social video.",
     descriptionAr:
@@ -222,6 +235,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Real Estate",
     categories: ["Shorts", "AI Videos", "Real Estate"],
     youtubeUrl: "https://www.youtube.com/watch?v=9DUZ5EjYuEs&list=PLETshD1aXTPU",
+    uploadedAt: "2026-06-13T07:50:27.000Z",
     description:
       "AI-led real estate edit for a development campaign, focused on presentation, pacing, and brand feel.",
     descriptionAr:
@@ -234,6 +248,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Commercials",
     categories: ["Shorts", "AI Videos", "Commercials"],
     youtubeUrl: "https://www.youtube.com/watch?v=yUjRnk6cMpY&list=PLETshD1aXTPU",
+    uploadedAt: "2026-06-13T07:49:58.000Z",
     description:
       "Commercial-style social video for an air-conditioning brand, built with AI visuals and clean delivery.",
     descriptionAr:
@@ -246,6 +261,7 @@ export const playlistWork: PortfolioItem[] = [
     category: "Commercials",
     categories: ["Shorts", "AI Videos", "Commercials"],
     youtubeUrl: "https://www.youtube.com/watch?v=QFaw_aAV3DQ&list=PLETshD1aXTPU",
+    uploadedAt: "2026-06-13T07:49:16.000Z",
     description:
       "Short commercial edit for an air-conditioning brand, balancing generated visuals with direct messaging.",
     descriptionAr:
@@ -401,7 +417,19 @@ export const driveWork: PortfolioItem[] = [
   },
 ];
 
+// The site sorts this list by uploadedAt, newest first; the first card of each
+// page is the large one.
 export const portfolioWork: PortfolioItem[] = [...playlistWork, ...driveWork];
+
+// Web app URL of apps-script/drive-sync.gs (ends in /exec). It adds the videos
+// it has described and supplies upload dates for every video in the Drive
+// folder. Leave empty to turn the sync off.
+export const driveSyncEndpoint =
+  "https://script.google.com/macros/s/AKfycbzkoOoXtoEqAjBlELc-pDZbIt-VH3WSZG6MWP6IL1fXui1I85SKODNgr5oR00XOE5ku/exec";
+
+// Path to a short, muted showreel clip for the hero background (for example
+// "assets/showreel.mp4" inside public/). Leave empty to use video thumbnails.
+export const showreelVideo = "";
 
 export const clientGroups = [
   {

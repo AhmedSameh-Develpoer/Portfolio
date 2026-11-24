@@ -37,6 +37,17 @@ https://www.youtube.com/shorts/VIDEO_ID
 
 The site automatically converts the link into an embedded video.
 
+Videos listed in `highlightTitles` are shown first among the hand-picked work.
+When the Drive sync is on (`apps-script/README.md`), new Drive uploads go above
+them, newest first. The first card on each page is the large one. Google Drive videos need "Anyone with the link" sharing, or their
+thumbnails will not load.
+
+## Hero Showreel
+
+The hero background shows drifting YouTube thumbnails. To use a real showreel
+instead, put a short muted clip in `public/assets/` and set `showreelVideo` in
+`src/portfolio-data.ts` (for example `"assets/showreel.mp4"`).
+
 ## Main Files
 
 - `src/App.tsx`: page structure
