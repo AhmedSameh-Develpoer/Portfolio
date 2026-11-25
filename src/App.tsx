@@ -637,7 +637,11 @@ function LazyVideo({
     <button
       className="video-trigger"
       type="button"
-      onClick={() => setIsLoaded(true)}
+      onClick={() => {
+        setIsLoaded(true);
+        // A playing Drive card grows taller on phones, moving everything below it.
+        window.requestAnimationFrame(refreshMotion);
+      }}
       aria-label={`${loadLabel}: ${title}`}
     >
       {thumbnailUrl && !hasThumbnailError ? (

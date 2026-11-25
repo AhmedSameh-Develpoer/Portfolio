@@ -1278,6 +1278,12 @@ p {
     aspect-ratio: 4 / 5;
   }
 
+  /* Drive's player floats its controls over the lower middle of the video;
+     at the shorts' own 9:16 the video fills the card and they sit lower. */
+  .work-card:has(iframe[src*="drive.google.com"]) {
+    aspect-ratio: 9 / 16;
+  }
+
   .tools-band {
     padding: 22px;
   }
