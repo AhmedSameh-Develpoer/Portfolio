@@ -1,5 +1,14 @@
-import { useEffect, useMemo, useReducer, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { fetchDriveWork, mergeDriveWork, type DriveSyncResult } from "./drive-sync";
+import { cutInWorkCards, refreshMotion, startMotion } from "./motion";
 import {
   clientGroups,
   contact,
@@ -686,9 +695,6 @@ export default function App() {
   );
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
     const root = document.documentElement;
 
     const updateProgress = () => {
@@ -699,43 +705,12 @@ export default function App() {
 
     updateProgress();
     window.addEventListener("scroll", updateProgress, { passive: true });
-
-    const revealTargets = document.querySelectorAll(".reveal-on-scroll");
-
-    if (reduceMotion) {
-      revealTargets.forEach((target) => target.classList.add("is-visible"));
-      return () => window.removeEventListener("scroll", updateProgress);
-    }
-
-    revealTargets.forEach((target, index) => {
-      target.classList.add("scroll-reveal");
-      (target as HTMLElement).style.setProperty(
-        "--reveal-delay",
-        `${Math.min(index % 4, 3) * 80}ms`,
-      );
-    });
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      // threshold 0: tall sections (the work grid on phones) never reach a
-      // larger visible ratio on short screens and would stay hidden.
-      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
-    );
-
-    revealTargets.forEach((target) => observer.observe(target));
-
-    return () => {
-      window.removeEventListener("scroll", updateProgress);
-      observer.disconnect();
-    };
+    return () => window.removeEventListener("scroll", updateProgress);
   }, []);
+
+  // Layout effect: the hero is hidden before the first paint, so its intro
+  // never flashes the finished frame first.
+  useLayoutEffect(() => startMotion(), []);
 
   // The last Drive feed is cached per browser so returning visitors see synced
   // videos immediately; Apps Script can take several seconds to answer.
@@ -796,6 +771,19 @@ export default function App() {
   );
   const hasWorkPagination = filteredWork.length > initialWorkCount;
 
+  const workGrid = useRef<HTMLDivElement>(null);
+  const isFirstWorkView = useRef(true);
+  useEffect(() => {
+    if (isFirstWorkView.current) {
+      isFirstWorkView.current = false;
+      return;
+    }
+    cutInWorkCards(workGrid.current);
+  }, [activeCategory, currentWorkPage]);
+
+  // Arabic text wraps differently, so scroll trigger positions move.
+  useEffect(refreshMotion, [language, orderedWork.length]);
+
   return (
     <main
       className={`site-shell${isLanguageTransitioning ? " is-language-switching" : ""}`}
@@ -830,10 +818,17 @@ export default function App() {
             decoding="async"
             fetchPriority="high"
           />
-          <h1 className="hero-name">Ahmed Sameh</h1>
+          <h1 className="hero-name" aria-label="Ahmed Sameh">
+            {/* One span per letter so the intro can cut them in one by one. */}
+            {[..."Ahmed Sameh"].map((letter, index) => (
+              <span className="hero-letter" aria-hidden="true" key={index}>
+                {letter === " " ? " " : letter}
+              </span>
+            ))}
+          </h1>
         </div>
 
-        <div className="hero-copy reveal-on-scroll">
+        <div className="hero-copy">
           <div className="hero-intro">
             <p className="eyebrow">{t.eyebrow}</p>
             <p className="title-line">{t.role}</p>
@@ -865,7 +860,7 @@ export default function App() {
         )}
       </div>
 
-      <section className="section work-section reveal-on-scroll" id="work">
+      <section className="section work-section" id="work">
         <div className="section-heading compact-heading">
           <div>
             <p className="eyebrow">{t.featured}</p>
@@ -928,7 +923,7 @@ export default function App() {
           ))}
         </div>
 
-        <div className="work-grid">
+        <div className="work-grid" ref={workGrid}>
           {visibleWork.map((item, index) => {
             const itemCategories = getWorkCategories(item);
             const visibleCategory =
@@ -993,17 +988,17 @@ export default function App() {
         ) : null}
       </section>
 
-      <section className="stats-band reveal-on-scroll" id="experience" aria-label={t.experience}>
+      <section className="stats-band" id="experience" aria-label={t.experience}>
         {["4+", "100+", "30+"].map((metric, index) => (
           <div className="stat" key={metric}>
-            <strong>{metric}</strong>
+            <strong data-count={metric}>{metric}</strong>
             <span>{t.metrics[index]}</span>
           </div>
         ))}
         <p className="stats-note">{t.experienceNote}</p>
       </section>
 
-      <section className="section services-section reveal-on-scroll" id="services">
+      <section className="section services-section" id="services">
         <div className="section-heading">
           <p className="eyebrow">{t.services}</p>
           <h2>{t.whatEdit}</h2>
@@ -1021,7 +1016,7 @@ export default function App() {
         </ol>
       </section>
 
-      <section className="clients-section reveal-on-scroll" id="clients">
+      <section className="clients-section" id="clients">
         <p className="eyebrow">{t.clients}</p>
         <div className="clients-marquee">
           <div className="clients-row">
@@ -1040,7 +1035,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="tools-band reveal-on-scroll" id="tools">
+      <section className="tools-band" id="tools">
         <p className="eyebrow">{t.tools}</p>
         <div className="tool-groups">
           <div className="tool-group">
@@ -1073,7 +1068,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="timeline-section reveal-on-scroll" aria-label="Experience timeline">
+      <section className="timeline-section" aria-label="Experience timeline">
         <div className="section-heading compact-heading">
           <div>
             <p className="eyebrow">{t.timeline}</p>
@@ -1093,7 +1088,7 @@ export default function App() {
       </section>
 
       <section
-        className="contact-section reveal-on-scroll"
+        className="contact-section"
         id="contact"
         style={
           {
