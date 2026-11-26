@@ -1109,11 +1109,7 @@ export default function App() {
         <div className="contact-links">
           <a className="contact-link is-primary" href={contact.whatsapp}>
             <small>WhatsApp</small>
-            <strong dir="ltr">{contact.phoneDisplay}</strong>
-          </a>
-          <a className="contact-link" href={contact.phoneAltHref}>
-            <small>{isArabic ? "رقم تاني" : "Phone"}</small>
-            <strong dir="ltr">{contact.phoneAlt}</strong>
+            <strong>{isArabic ? "ابعتلي رسالة" : "Message me"}</strong>
           </a>
           <a className="contact-link" href={`mailto:${contact.email}`}>
             <small>{isArabic ? "الإيميل" : "Email"}</small>

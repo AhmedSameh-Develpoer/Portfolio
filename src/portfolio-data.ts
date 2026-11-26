@@ -21,11 +21,9 @@ export type PortfolioItem = {
 };
 
 export const contact = {
-  whatsapp: "https://wa.me/201010032851",
-  phoneDisplay: "+20 101 003 2851",
-  // Second number, also on the CV; the WhatsApp one above stays the main contact.
-  phoneAlt: "+20 103 039 5062",
-  phoneAltHref: "tel:+201030395062",
+  // WhatsApp Business short link: opens a chat without putting the phone number
+  // in the page or the URL, so the number can't be scraped from the site.
+  whatsapp: "https://wa.me/message/2OUCJPLKBCZFC1",
   email: "ahmedsameh2465@gmail.com",
   linkedin: "https://www.linkedin.com/in/ahmed-sameh-97010a333",
   drivePortfolio:
